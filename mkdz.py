@@ -17,7 +17,7 @@ Copyright (C) 2016 Elliott Mitchell <ehem+android@m5p.com>
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import os
 import sys
 import io
@@ -148,7 +148,7 @@ class MKDZFile(dz.DZFile):
 			params[new] = params[old]
 			del params[old]
 
-		for k in [k for k in params.keys()]:
+		for k in [k for k in list(params.keys())]:
 			t = k.partition('_')
 			if t[1]:
 				while t[1]:
@@ -156,7 +156,7 @@ class MKDZFile(dz.DZFile):
 					t = new.partition('_')
 				params[new] = params[k]
 
-		for k in self._dz_format_dict.keys():
+		for k in list(self._dz_format_dict.keys()):
 			if k[0:8] == "reserved" or k == "header" or k == "pad" or k == "chunkCount" or k == "md5":
 				continue
 			if k not in params:

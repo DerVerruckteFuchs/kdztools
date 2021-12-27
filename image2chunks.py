@@ -17,7 +17,7 @@ Copyright (C) 2016 Elliott Mitchell <ehem+android@m5p.com>
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import os
 import sys
 import subprocess

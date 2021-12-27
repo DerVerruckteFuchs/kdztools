@@ -18,7 +18,7 @@ Copyright (C) 2013 IOMonster (thecubed on XDA)
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import os
 import argparse
 import sys
@@ -60,10 +60,10 @@ class KDZFileTools(kdz.KDZFile):
 		# Create a new dict using the keys from the format string
 		# and the format string itself
 		# and apply the format to the buffer
-		kdz_item = dict(zip(
-			self._dz_format_dict.keys(),
+		kdz_item = dict(list(zip(
+			list(self._dz_format_dict.keys()),
 			self._dz_struct.unpack(buf)
-		))
+		)))
 
 		# Collapse (truncate) each key's value if it's listed as collapsible
 		for key in self._dz_collapsibles:

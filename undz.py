@@ -18,7 +18,7 @@ Copyright (C) 2013 IOMonster (thecubed on XDA)
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import os
 import sys
 import io
@@ -436,25 +436,25 @@ class UNDZSlice(object):
 
 		# write a params file for saving values used during recreate
 		params = io.open(name + ".params", "wt")
-		params.write(u'# saved parameters for the file "{:s}"\n'.format(name))
-		params.write(u"startLBA={:d}\n".format(start >> self.dz.shiftLBA))
-		params.write(u"startAddr={:d}\n".format(start))
-		params.write(u"endLBA={:d}\n".format(end >> self.dz.shiftLBA))
-		params.write(u"endAddr={:d}\n".format(end))
-		params.write(u"# this value may be crucial for success and dangerous to modify\n")
+		params.write('# saved parameters for the file "{:s}"\n'.format(name))
+		params.write("startLBA={:d}\n".format(start >> self.dz.shiftLBA))
+		params.write("startAddr={:d}\n".format(start))
+		params.write("endLBA={:d}\n".format(end >> self.dz.shiftLBA))
+		params.write("endAddr={:d}\n".format(end))
+		params.write("# this value may be crucial for success and dangerous to modify\n")
 
 		if len(self.chunks) > 0:
 			last = self.chunks[-1]
-			params.write(u"lastWipe={:d}\n".format((last.getTargetStart() >> self.dz.shiftLBA) + last.trimCount))
-			params.write(u"# Indicates which flash device this should be written in\n")
-			params.write(u"dev={:d}\n".format(self.chunks[0].getDev()))
-			params.write(u"# the block size is important!\n")
-			params.write(u"blockSize={:d}\n".format(1<<self.dz.shiftLBA))
-			params.write(u"blockShift={:d}\n".format(self.dz.shiftLBA))
+			params.write("lastWipe={:d}\n".format((last.getTargetStart() >> self.dz.shiftLBA) + last.trimCount))
+			params.write("# Indicates which flash device this should be written in\n")
+			params.write("dev={:d}\n".format(self.chunks[0].getDev()))
+			params.write("# the block size is important!\n")
+			params.write("blockSize={:d}\n".format(1<<self.dz.shiftLBA))
+			params.write("blockShift={:d}\n".format(self.dz.shiftLBA))
 		else:
-			params.write(u"phantom=1\n")
-			params.write(u"# this is a phantom slice, no writes are done\n")
-			params.write(u"# (though it could be getting wiped)\n")
+			params.write("phantom=1\n")
+			params.write("# this is a phantom slice, no writes are done\n")
+			params.write("# (though it could be getting wiped)\n")
 
 		params.close()
 
@@ -591,7 +591,7 @@ class UNDZFile(dz.DZFile, UNDZUtils):
 		try:
 			emptycount = 0
 			g = gpt.GPT(self.chunks[0].extract())
-			ordered = range(len(g.slices)) if g.ordered else range(len(g.slices)).sort(key=lambda s: g.slices[s].startLBA)
+			ordered = list(range(len(g.slices))) if g.ordered else list(range(len(g.slices))).sort(key=lambda s: g.slices[s].startLBA)
 
 			self.shiftLBA = g.shiftLBA
 
@@ -905,7 +905,7 @@ class DZFileTools:
 	def cmdExtractChunk(self, files):
 		if len(files) == 0:
 			print("[+] Extracting all chunks!\n")
-			files = range(0, self.dz_file.getChunkCount())
+			files = list(range(0, self.dz_file.getChunkCount()))
 		elif len(files) == 1:
 			print("[+] Extracting single chunk!\n")
 		else:
@@ -928,7 +928,7 @@ class DZFileTools:
 	def cmdExtractChunkfile(self, files):
 		if len(files) == 0:
 			print("[+] Extracting all chunkfiles!\n")
-			files = range(0, self.dz_file.getChunkCount())
+			files = list(range(0, self.dz_file.getChunkCount()))
 		elif len(files) == 1:
 			print("[+] Extracting single chunkfile!\n")
 		else:
@@ -951,7 +951,7 @@ class DZFileTools:
 	def cmdExtractSlice(self, files):
 		if len(files) == 0:
 			print("[+] Extracting all slices^Wpartitions\n")
-			files = range(0, self.dz_file.getSlice(-1).getIndex()+1)
+			files = list(range(0, self.dz_file.getSlice(-1).getIndex()+1))
 		elif len(files) == 1:
 			print("[+] Extracting single slice^Wpartition!\n")
 		else:

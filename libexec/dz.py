@@ -18,7 +18,7 @@ Copyright (C) 2013 IOMonster (thecubed on XDA)
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import sys
 from struct import Struct
 from collections import OrderedDict
@@ -43,7 +43,7 @@ class DZStruct(object):
 			classy._dzstruct
 
 		except AttributeError:
-			classy._dz_struct = Struct("<" + "".join([x[0] for x in classy._dz_format_dict.values()]))
+			classy._dz_struct = Struct("<" + "".join([x[0] for x in list(classy._dz_format_dict.values())]))
 
 			# Sanity check
 			if self._dz_struct.size != self._dz_length:
@@ -55,7 +55,7 @@ class DZStruct(object):
 			classy._dz_collapsibles
 
 		except AttributeError:
-			classy._dz_collapsibles = [n for n, (y, p) in classy._dz_format_dict.items() if p]
+			classy._dz_collapsibles = [n for n, (y, p) in list(classy._dz_format_dict.items()) if p]
 
 
 	def packdict(self, din):
@@ -66,7 +66,7 @@ class DZStruct(object):
 		dout = dict()
 
 		# pad any string keys that need padding
-		for k in self._dz_format_dict.keys():
+		for k in list(self._dz_format_dict.keys()):
 			if self._dz_format_dict[k][0][-1] == 's':
 				l = int(self._dz_format_dict[k][0][:-1])
 				dout[k] = (din[k] if k in din else b"").ljust(l, b'\x00')
@@ -77,7 +77,7 @@ class DZStruct(object):
 
 		dout['header'] = self._dz_header
 
-		values = [dout[k] for k in self._dz_format_dict.keys()]
+		values = [dout[k] for k in list(self._dz_format_dict.keys())]
 		buffer = self._dz_struct.pack(*values)
 
 		return buffer
@@ -89,10 +89,10 @@ class DZStruct(object):
 		if magic number/header is absent
 		"""
 
-		d = dict(zip(
-			self._dz_format_dict.keys(),
+		d = dict(list(zip(
+			list(self._dz_format_dict.keys()),
 			self._dz_struct.unpack(buffer)
-		))
+		)))
 
 		if d['header'] != self._dz_header:
 			return None

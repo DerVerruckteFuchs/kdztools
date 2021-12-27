@@ -17,7 +17,7 @@ Copyright (C) 2016 Elliott Mitchell <ehem+android@m5p.com>
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 """
 
-from __future__ import print_function
+
 import os
 import sys
 import io
@@ -59,7 +59,7 @@ class GPTSlice(object):
 	])
 
 	# Generate the formatstring for struct.unpack()
-	_gpt_struct = Struct("<" + "".join([x for x in _gpt_slice_fmt.values()]))
+	_gpt_struct = Struct("<" + "".join([x for x in list(_gpt_slice_fmt.values())]))
 
 	def display(self, idx):
 		"""
@@ -78,10 +78,10 @@ class GPTSlice(object):
 		Initialize the GPTSlice class
 		"""
 
-		data = dict(zip(
-			self._gpt_slice_fmt.keys(),
+		data = dict(list(zip(
+			list(self._gpt_slice_fmt.keys()),
 			self._gpt_struct.unpack(buf)
-		))
+		)))
 
 		self.type = UUID(bytes=data['type'])
 		self.uuid = UUID(bytes=data['uuid'])
@@ -124,7 +124,7 @@ class GPT(object):
 	])
 
 	# Generate the formatstring for struct.unpack()
-	_gpt_struct = Struct("<" + "".join([x for x in _gpt_head_fmt.values()]))
+	_gpt_struct = Struct("<" + "".join([x for x in list(_gpt_head_fmt.values())]))
 
 
 
@@ -176,10 +176,10 @@ class GPT(object):
 		if len(buf) < self._gpt_size:
 			raise NoGPT("Failed to locate GPT")
 
-		data = dict(zip(
-			self._gpt_head_fmt.keys(),
+		data = dict(list(zip(
+			list(self._gpt_head_fmt.keys()),
 			self._gpt_struct.unpack(buf[0:self._gpt_size])
-		))
+		)))
 
 		if data['header'] != self._gpt_header:
 			return None
@@ -187,7 +187,7 @@ class GPT(object):
 		tmp = data['crc32']
 		data['crc32'] = 0
 
-		crc = crc32(self._gpt_struct.pack(*[data[k] for k in self._gpt_head_fmt.keys()]))
+		crc = crc32(self._gpt_struct.pack(*[data[k] for k in list(self._gpt_head_fmt.keys())]))
 
 		data['crc32'] = tmp
 
